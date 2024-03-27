@@ -7,6 +7,7 @@ const bodyParser = require("body-parser")
 const cors = require("cors")
 const { default: mongoose } = require("mongoose")
 const propertyRouter = require("./Routes/PropertiesRoute")
+const authRouter = require("./Routes/authRouter")
 
 
 
@@ -21,6 +22,7 @@ app.use(express.json())
 app.use(cors(corsOptions))
 app.use(bodyParser.json())
 
+// --------- Database Connection --------------
 
 const connectDatabase = async()=>{
     try {
@@ -33,12 +35,17 @@ const connectDatabase = async()=>{
 }
 connectDatabase().catch(err=> console.log(err.message))
 
+// --------- Router --------------
+app.use("/api/v1/properties", propertyRouter)
+app.use("/api/v1/auth", authRouter)
+
+
+// ---------- Home Route ------------
 app.get("/", (req, res)=>{
     return res.send("Dream House Server Running")
 })
 
 
-app.use("/api/v1/properties", propertyRouter)
 
 app.listen(port, ()=>{
     console.log(`Server running with ${port}`)
